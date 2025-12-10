@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Berto's Bite Site</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #020617;
+      --card: #020617;
+      --accent: #461D7C;
+      --accent-soft: rgba(70,29,124,0.15);
+      --accent-soft-2: rgba(70,29,124,0.05);
+      --border-subtle: rgba(148,163,184,0.35);
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --text-softer: #6b7280;
+      --radius-xl: 1.5rem;
+      --shadow-soft: 0 24px 60px rgba(15,23,42,0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px 48px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1180px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+      border-radius: 32px;
+      border: 1px solid rgba(148,163,184,0.25);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(248,250,252,0.04) 0, transparent 50%),
+        radial-gradient(circle at 100% 0%, rgba(248,250,252,0.05) 0, transparent 50%),
+        radial-gradient(circle at 50% 120%, rgba(249,115,22,0.08) 0, transparent 55%);
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    header {
+      padding: 24px 28px 18px;
+      border-bottom: 1px solid rgba(148,163,184,0.35);
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.9));
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-text h1 {
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .badge-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.55);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-soft);
+    }
+
+    .brand-text p {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .meta-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top left, rgba(15,23,42,1) 0, rgba(15,23,42,0.94) 55%, rgba(15,23,42,0.9) 100%);
+      border: 1px solid rgba(148,163,184,0.3);
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    .meta-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34,197,94,0.9);
+    }
+
+    .primary-cta {
+      border-radius: 999px;
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #461D7C, #FDD023);
+      border: 1px solid rgba(248,250,252,0.2);
+      color: #fefce8;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 14px 30px rgba(248,113,22,0.35);
+    }
+
+    .primary-cta span.icon {
+      font-size: 16px;
+    }
+
+    .primary-cta:hover {
+      transform: translateY(-0.5px);
+      box-shadow: 0 18px 40px rgba(248,113,22,0.45);
+    }
+
+    .theme-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: radial-gradient(circle at 0% 0%, rgba(15,23,42,0.98), rgba(15,23,42,0.94));
+      font-size: 10px;
+    }
+
+    .theme-switch select {
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 10px;
+      outline: none;
+    }
+
+    .theme-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-softer);
+      font-size: 9px;
+    }
+
+    main {
+      padding: 18px 24px 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 880px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      header {
+        position: static;
+      }
+      body {
+        padding: 16px;
+      }
+    }
+
+    .hero-card {
+      grid-column: 1 / -1;
+      margin-bottom: 6px;
+      padding: 18px 18px 16px;
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, rgba(15,23,42,0.94), rgba(15,23,42,0.98)),
+        radial-gradient(circle at 0% 0%, rgba(251,146,60,0.16) 0, transparent 55%);
+      border: 1px solid rgba(148,163,184,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 90% 0%, rgba(248,250,252,0.08) 0, transparent 58%),
+        radial-gradient(circle at 120% 80%, rgba(249,115,22,0.12) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .hero-copy h2 {
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .hero-copy p {
+      font-size: 13px;
+      color: var(--text-soft);
+      max-width: 420px;
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      margin-top: 8px;
+    }
+
+    .stat-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.75);
+      border: 1px solid rgba(148,163,184,0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-pill strong {
+      color: #e5e7eb;
+    }
+
+    .hero-accent {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .hero-rating {
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: radial-gradient(circle at 0% 0%, rgba(15,23,42,0.95), rgba(15,23,42,0.9));
+      border: 1px solid rgba(248,250,252,0.14);
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      min-width: 160px;
+      gap: 4px;
+    }
+
+    .hero-rating-stars {
+      font-size: 14px;
+      letter-spacing: 0.12em;
+    }
+
+    .hero-rating span.value {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .hero-catching-tag {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(22,163,74,0.14);
+      border: 1px solid rgba(34,197,94,0.5);
+      font-size: 10px;
+      color: #bbf7d0;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .panel {
+      border-radius: 24px;
+      background: radial-gradient(circle at 0% 0%, rgba(15,23,42,0.94), rgba(15,23,42,0.98));
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 14px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(249,115,22,0.9);
+    }
+
+    .panel-subtitle {
+      font-size: 11px;
+      color: var(--text-softer);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid rgba(148,163,184,0.55);
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: radial-gradient(circle at 0% 0%, rgba(15,23,42,0.98), rgba(15,23,42,0.94));
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .chip span.icon {
+      font-size: 13px;
+    }
+
+    .chip.active {
+      border-color: var(--accent);
+      color: #fed7aa;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(249,115,22,0.32), rgba(15,23,42,0.98));
+      box-shadow: 0 14px 30px rgba(248,113,22,0.3);
+    }
+
+    .chip-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      border: 1px dashed rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: var(--text-softer);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .field-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .field-wrap input,
+    .field-wrap select {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      padding: 8px 12px 8px 28px;
+      font-size: 11px;
+      background: radial-gradient(circle at 0% 0%, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .field-wrap select {
+      padding-left: 10px;
+    }
+
+    .field-wrap input::placeholder {
+      color: var(--text-softer);
+    }
+
+    .field-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      opacity: 0.75;
+    }
+
+    .field-wrap small {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 9px;
+      color: var(--text-softer);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .tag-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .tag-pill {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.55);
+      color: var(--text-soft);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .tag-pill strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .review-card {
+      position: relative;
+      border-radius: 20px;
+      padding: 12px 12px 10px;
+      background: radial-gradient(circle at 0% 0%, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+      border: 1px solid rgba(148,163,184,0.4);
+      box-shadow: 0 20px 40px rgba(15,23,42,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 120px;
+      overflow: hidden;
+    }
+
+    .review-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0% 0%, rgba(248,250,252,0.05) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .review-row-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .restaurant-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .restaurant-meta {
+      font-size: 10px;
+      color: var(--text-softer);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .rating-pill {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(248,250,252,0.16);
+      background: radial-gradient(circle at 0 0, rgba(249,115,22,0.22), rgba(15,23,42,0.98));
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .rating-pill span.stars {
+      letter-spacing: 0.12em;
+    }
+
+    .rating-pill span.score {
+      font-weight: 600;
+    }
+
+    .review-body {
+      font-size: 11px;
+      color: var(--text-soft);
+      line-height: 1.4;
+    }
+
+    .review-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .review-tag {
+      font-size: 9px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--text-softer);
+      background: rgba(15,23,42,0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .gameday-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(253,208,35,0.15);
+      border: 1px solid rgba(253,208,35,0.5);
+      color: #fde68a;
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      display: none;
+    }
+
+    .review-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 10px;
+      color: var(--text-softer);
+    }
+
+    .review-footer .left {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .review-footer .dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(148,163,184,0.8);
+    }
+
+    .review-footer .label-pill {
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .empty-state {
+      font-size: 11px;
+      color: var(--text-softer);
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px dashed rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      text-align: center;
+    }
+
+    .add-review-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .form-row-inline {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .form-field {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-field label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 8px 10px;
+      font-size: 11px;
+      background: radial-gradient(circle at 0% 0%, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+      color: var(--text-main);
+      outline: none;
+      resize: vertical;
+      min-height: 32px;
+    }
+
+    .form-field textarea {
+      min-height: 60px;
+    }
+
+    .form-hint {
+      font-size: 9px;
+      color: var(--text-softer);
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      padding: 7px 14px;
+      border: 1px solid rgba(248,250,252,0.2);
+      background: linear-gradient(135deg, #461D7C, #FDD023);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 600;
+      color: #fefce8;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 12px 30px rgba(248,113,22,0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-0.5px);
+      box-shadow: 0 18px 46px rgba(248,113,22,0.65);
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15,23,42,0.9);
+    }
+
+    footer {
+      padding: 8px 22px 16px;
+      border-top: 1px solid rgba(148,163,184,0.35);
+      font-size: 10px;
+      color: var(--text-softer);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    footer span strong {
+      color: #e5e7eb;
+    }
+
+    footer .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    footer .pill-mini {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.55);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .top-spots-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 11px;
+    }
+
+    .top-spot-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 8px;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.4);
+    }
+
+    .top-spot-rank {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(253,208,35,0.6);
+      color: #fde68a;
+    }
+
+    .top-spot-name {
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text-main);
+    }
+
+    .top-spot-meta {
+      font-size: 10px;
+      color: var(--text-softer);
+      margin-top: 2px;
+    }
+
+    .top-spot-score {
+      text-align: right;
+      font-size: 10px;
+    }
+
+    .top-spot-stars {
+      letter-spacing: 0.12em;
+    }
+
+    .top-spot-rating {
+      font-weight: 600;
+    }
+
+    /* Theme variants using CSS variables on body */
+    body.theme-gold-blast {
+      --accent: #FDD023;
+      --accent-soft: rgba(253,208,35,0.25);
+      --accent-soft-2: rgba(253,208,35,0.08);
+      --bg: #1a1a1a;
+      --card: #0d0d0d;
+    }
+
+    body.theme-gold-blast .review-card,
+    body.theme-gold-blast .panel {
+      box-shadow: 0 0 18px rgba(253,208,35,0.35);
+    }
+
+    body.theme-night-game {
+      --accent: #FDD023;
+      --accent-soft: rgba(253,208,35,0.25);
+      --accent-soft-2: rgba(253,208,35,0.1);
+      --bg: #0a0714;
+      --card: #120e27;
+    }
+
+    body.theme-night-game .review-card,
+    body.theme-night-game .panel {
+      box-shadow: 0 0 22px rgba(253,208,35,0.4);
+    }
+  </style>
+</head>
+<body class="theme-night-game">
+  <div class="app-shell">
+    <header>
+      <div class="header-inner">
+        <div class="brand">
+          <div class="brand-logo">
+            <!-- Custom Logo SVG (LSU-Inspired Tiger Badge) -->
+            <svg width="52" height="52" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="border-radius:50%;box-shadow:0 0 22px rgba(253,208,35,0.6);background:#461D7C;">
+              <circle cx="50" cy="50" r="48" fill="#461D7C" stroke="#FDD023" stroke-width="4" />
+              <text x="50" y="58" text-anchor="middle" font-size="34" font-family="Arial Black" fill="#FDD023">BB</text>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <h1>Berto's Bite Site</h1>
+              <span class="badge-pill">Personal Restaurant Log</span>
+            </div>
+            <p>Capture every bite. Track your ratings. Remember where to go back (&amp; where not to).</p>
+          </div>
+        </div>
+        <div class="header-meta">
+          <div class="meta-pill">
+            <span class="meta-dot"></span>
+            <span>Session active &bull; Your private review dashboard</span>
+          </div>
+          <div class="theme-switch">
+            <span class="theme-label">Theme</span>
+            <select id="themeSelect">
+              <option value="theme-default">Purple Classic</option>
+              <option value="theme-gold-blast">Gold Blast</option>
+              <option value="theme-night-game" selected>Night Game</option>
+            </select>
+          </div>
+          <button class="primary-cta" id="scrollToFormBtn">
+            <span class="icon">➕</span>
+            <span>Add new review</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-card">
+        <div class="hero-copy">
+          <h2>Berto's Bite Site: Every Bite Gets a Score</h2>
+          <p>
+            Use this page as your personal food journal. Log restaurants, score dishes, and tag
+            your favorites so you always know the best spot for any craving.
+          </p>
+          <div class="hero-stats" id="heroStats">
+            <div class="stat-pill">
+              <span>🍽️</span>
+              <span><strong><span id="statTotalPlaces">0</span></strong>&nbsp;places logged</span>
+            </div>
+            <div class="stat-pill">
+              <span>⭐</span>
+              <span>Average rating&nbsp;<strong id="statAverage">–</strong></span>
+            </div>
+            <div class="stat-pill">
+              <span>📍</span>
+              <span>Top cuisine:&nbsp;<strong id="statTopCuisine">–</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-accent">
+          <div class="hero-rating">
+            <span class="label">Latest highlight</span>
+            <div class="hero-rating-stars" id="heroStars">☆☆☆☆☆</div>
+            <span class="value" id="heroLatestName">No reviews yet</span>
+            <span class="label">Tap "Add new review" to get started</span>
+          </div>
+          <span class="hero-catching-tag">Built for your tastebuds</span>
+        </div>
+      </section>
+
+      <section class="panel about-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">
+              <span class="panel-title-dot"></span>
+              <span>About Berto</span>
+            </div>
+            <div class="panel-subtitle">The story behind Berto's Bite Site.</div>
+          </div>
+        </div>
+        <div class="about-body" style="font-size:11px;color:var(--text-soft);line-height:1.5;">
+          <p><strong>Berto</strong> is on a mission to track every memorable bite &mdash; from hole-in-the-wall taco joints to late-night burger runs and special-occasion dinners. This site is a personal logbook, not a sponsored review page, so every rating is based on real visits, real checks, and real cravings.</p>
+          <p style="margin-top:6px;">Use the filters to quickly find spots for <em>date night</em>, <em>cheap eats</em>, <em>LSU game day</em>, or whatever vibe you&#39;re chasing next.</p>
+        </div>
+      </section>
+
+      <section class="panel" style="grid-row: span 2;">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">
+              <span class="panel-title-dot"></span>
+              <span>Review Library</span>
+            </div>
+            <div class="panel-subtitle">Search and filter your restaurant notes.</div>
+          </div>
+          <div class="chip-toggle">
+            <span>Sort by</span>
+            <select id="sortSelect" style="border:none;background:transparent;color:inherit;font-size:10px;outline:none;">
+              <option value="date-desc">Newest first</option>
+              <option value="date-asc">Oldest first</option>
+              <option value="rating-desc">Highest rated</option>
+              <option value="rating-asc">Lowest rated</option>
+              <option value="name-asc">Name A → Z</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filters">
+          <button class="chip active" data-rating-filter="all">
+            <span class="icon">🎛️</span>
+            <span>All ratings</span>
+          </button>
+          <button class="chip" data-rating-filter="5">5★ only</button>
+          <button class="chip" data-rating-filter="4">4★ &amp; up</button>
+          <button class="chip" data-rating-filter="3">3★ &amp; up</button>
+        </div>
+
+        <div class="search-row">
+          <div class="field-wrap">
+            <span class="field-icon">🔎</span>
+            <input id="searchInput" type="text" placeholder="Search by restaurant, dish, notes, or tags" />
+            <small>Type to filter</small>
+          </div>
+          <div class="field-wrap" style="max-width: 160px;">
+            <select id="cuisineFilter">
+              <option value="">All cuisines</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="tag-pills" id="quickTagRow">
+          <!-- Quick tags will render here -->
+        </div>
+
+        <div id="reviewsGrid" class="reviews-grid"></div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+          No reviews match your filters yet. Clear a few filters or add a new restaurant using the
+          form on the right.
+        </div>
+      </section>
+
+      <section class="panel" id="topSpotsPanel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">
+              <span class="panel-title-dot"></span>
+              <span>Top 5 Spots</span>
+            </div>
+            <div class="panel-subtitle">Auto-ranked by rating and most recent visits.</div>
+          </div>
+        </div>
+        <div id="topSpotsList" class="top-spots-list"></div>
+        <div class="empty-state" id="topSpotsEmpty" style="display:none;">
+          No top spots yet &mdash; add a few reviews to see your leaderboard.
+        </div>
+      </section>
+
+      <section class="panel" id="addReviewPanel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">
+              <span class="panel-title-dot"></span>
+              <span>Add New Entry</span>
+            </div>
+            <div class="panel-subtitle">Log a restaurant visit in under a minute.</div>
+          </div>
+        </div>
+
+        <form class="add-review-form" id="addReviewForm">
+          <div class="form-row-inline">
+            <div class="form-field">
+              <label for="restaurantName">Restaurant</label>
+              <input id="restaurantName" type="text" placeholder="Ex: La Cocina" required />
+            </div>
+            <div class="form-field">
+              <label for="visitDate">Visit date</label>
+              <input id="visitDate" type="date" />
+            </div>
+          </div>
+
+          <div class="form-row-inline">
+            <div class="form-field">
+              <label for="cuisine">Cuisine</label>
+              <input id="cuisine" type="text" placeholder="Ex: Mexican, Sushi, BBQ" />
+            </div>
+            <div class="form-field" style="max-width:120px;">
+              <label for="rating">Rating</label>
+              <select id="rating" required>
+                <option value="">–</option>
+                <option value="5">5 – Incredible</option>
+                <option value="4">4 – Great</option>
+                <option value="3">3 – Solid</option>
+                <option value="2">2 – Meh</option>
+                <option value="1">1 – Skip</option>
+              </select>
+            </div>
+            <div class="form-field" style="max-width:120px;">
+              <label for="priceLevel">Price</label>
+              <select id="priceLevel">
+                <option value="">–</option>
+                <option value="$">$ – Budget</option>
+                <option value="$$">$$ – Moderate</option>
+                <option value="$$$">$$$ – Upscale</option>
+                <option value="$$$$">$$$$ – Splurge</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="favoriteDish">Favorite dish (optional)</label>
+            <input id="favoriteDish" type="text" placeholder="Ex: Birria tacos, spicy edamame" />
+          </div>
+
+          <div class="form-field">
+            <label for="notes">Quick notes</label>
+            <textarea id="notes" placeholder="Flavor, service, vibe, price, anything you want to remember..."></textarea>
+            <div class="form-hint">Tip: Add key words like "date night", "takeout", "lunch spot" to help search later.</div>
+          </div>
+
+          <div class="form-field">
+            <label for="tags">Tags (comma-separated)</label>
+            <input id="tags" type="text" placeholder="Ex: date night, spicy, cheap eats, gameday" />
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn-primary">
+              <span>Save review</span>
+              <span>⬇</span>
+            </button>
+            <button type="button" class="btn-secondary" id="clearFormBtn">
+              <span>Reset form</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        Private log &bull; <strong>Berto's Bite Site</strong>
+      </span>
+      <div class="footer-right">
+        <span class="pill-mini">Pro tip: Press Ctrl+P to print this page as a PDF</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const reviews = [
+      {
+        id: 1,
+        name: "Sample Bistro",
+        cuisine: "American",
+        rating: 4,
+        priceLevel: "$$",
+        favoriteDish: "Smash burger",
+        notes: "Juicy burger, crispy fries, a little loud inside but great for casual nights.",
+        tags: ["casual", "burger", "fries"],
+        date: "2025-01-10",
+        location: "Downtown",
+      },
+      {
+        id: 2,
+        name: "Tokyo Street",
+        cuisine: "Japanese",
+        rating: 5,
+        priceLevel: "$$$",
+        favoriteDish: "Spicy tuna roll",
+        notes: "Super fresh sushi. Good for date night or solo bar seating.",
+        tags: ["sushi", "date night", "fresh"],
+        date: "2025-01-05",
+        location: "Midtown",
+      },
+      {
+        id: 3,
+        name: "La Abuela's Kitchen",
+        cuisine: "Mexican",
+        rating: 3,
+        priceLevel: "$$",
+        favoriteDish: "Chicken enchiladas",
+        notes: "Tasty food but service was a little slow. Great salsa bar.",
+        tags: ["family", "salsa", "enchiladas", "gameday"],
+        date: "2024-12-20",
+        location: "West side",
+      },
+    ];
+
+    let nextId = reviews.length + 1;
+    let activeRatingFilter = "all";
+    let activeTagFilter = "";
+
+    const reviewsGrid = document.getElementById("reviewsGrid");
+    const emptyState = document.getElementById("emptyState");
+    const searchInput = document.getElementById("searchInput");
+    const cuisineFilter = document.getElementById("cuisineFilter");
+    const sortSelect = document.getElementById("sortSelect");
+    const quickTagRow = document.getElementById("quickTagRow");
+    const themeSelect = document.getElementById("themeSelect");
+    const topSpotsList = document.getElementById("topSpotsList");
+    const topSpotsEmpty = document.getElementById("topSpotsEmpty");
+
+    const statTotalPlaces = document.getElementById("statTotalPlaces");
+    const statAverage = document.getElementById("statAverage");
+    const statTopCuisine = document.getElementById("statTopCuisine");
+    const heroStars = document.getElementById("heroStars");
+    const heroLatestName = document.getElementById("heroLatestName");
+
+    const addReviewForm = document.getElementById("addReviewForm");
+    const clearFormBtn = document.getElementById("clearFormBtn");
+    const scrollToFormBtn = document.getElementById("scrollToFormBtn");
+    const addReviewPanel = document.getElementById("addReviewPanel");
+
+    function applyTheme(theme) {
+      const themes = ["theme-default", "theme-gold-blast", "theme-night-game"];
+      document.body.classList.remove(...themes);
+      if (theme === "theme-default") {
+        // base style, no extra class
+      } else {
+        document.body.classList.add(theme);
+      }
+      try {
+        localStorage.setItem("bbs_theme", theme);
+      } catch (e) {
+        // ignore if storage unavailable
+      }
+    }
+
+    if (themeSelect) {
+      let initialTheme = "theme-night-game";
+      try {
+        const stored = localStorage.getItem("bbs_theme");
+        if (stored) initialTheme = stored;
+      } catch (e) {
+        // ignore
+      }
+      applyTheme(initialTheme);
+      themeSelect.value = initialTheme;
+
+      themeSelect.addEventListener("change", (e) => {
+        applyTheme(e.target.value);
+      });
+    }
+
+    function getStars(rating) {
+      const full = "★".repeat(rating);
+      const empty = "☆".repeat(5 - rating);
+      return full + empty;
+    }
+
+    function renderStats(filteredReviews) {
+      const list = filteredReviews && filteredReviews.length ? filteredReviews : reviews;
+      if (!list.length) {
+        statTotalPlaces.textContent = "0";
+        statAverage.textContent = "–";
+        statTopCuisine.textContent = "–";
+        heroStars.textContent = "☆☆☆☆☆";
+        heroLatestName.textContent = "No reviews yet";
+        return;
+      }
+
+      statTotalPlaces.textContent = String(list.length);
+
+      const avg = list.reduce((sum, r) => sum + (r.rating || 0), 0) / list.length;
+      statAverage.textContent = avg.toFixed(1);
+
+      const cuisineCount = {};
+      list.forEach((r) => {
+        if (!r.cuisine) return;
+        const key = r.cuisine.trim();
+        cuisineCount[key] = (cuisineCount[key] || 0) + 1;
+      });
+      let topCuisine = "–";
+      let maxCount = 0;
+      Object.entries(cuisineCount).forEach(([cuisine, count]) => {
+        if (count > maxCount) {
+          maxCount = count;
+          topCuisine = cuisine;
+        }
+      });
+      statTopCuisine.textContent = topCuisine;
+
+      const sortedByDate = [...list].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+      const latest = sortedByDate[0];
+      if (latest) {
+        heroStars.textContent = getStars(latest.rating || 0);
+        heroLatestName.textContent = latest.name || "Latest review";
+      }
+    }
+
+    function buildCuisineOptions() {
+      const set = new Set();
+      reviews.forEach((r) => {
+        if (r.cuisine) set.add(r.cuisine.trim());
+      });
+      cuisineFilter.innerHTML = '<option value="">All cuisines</option>';
+      Array.from(set)
+        .sort((a, b) => a.localeCompare(b))
+        .forEach((cuisine) => {
+          const opt = document.createElement("option");
+          opt.value = cuisine;
+          opt.textContent = cuisine;
+          cuisineFilter.appendChild(opt);
+        });
+    }
+
+    function buildQuickTags() {
+      const tagCount = {};
+      reviews.forEach((r) => {
+        (r.tags || []).forEach((tag) => {
+          const key = tag.trim().toLowerCase();
+          if (!key) return;
+          tagCount[key] = (tagCount[key] || 0) + 1;
+        });
+      });
+
+      const tags = Object.entries(tagCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6);
+
+      quickTagRow.innerHTML = "";
+      if (!tags.length) return;
+
+      tags.forEach(([tag, count]) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "tag-pill";
+        btn.textContent = `#${tag} (${count})`;
+        btn.dataset.tag = tag;
+        if (activeTagFilter === tag) {
+          btn.style.borderColor = "var(--accent)";
+          btn.style.background = "var(--accent-soft-2)";
+          btn.style.color = "#fed7aa";
+        }
+        btn.addEventListener("click", () => {
+          activeTagFilter = activeTagFilter === tag ? "" : tag;
+          buildQuickTags();
+          renderReviews();
+        });
+        quickTagRow.appendChild(btn);
+      });
+    }
+
+    function applyFiltersAndSorting() {
+      const term = searchInput.value.trim().toLowerCase();
+      const cuisine = cuisineFilter.value;
+      const sortMode = sortSelect.value;
+      const ratingFilter = activeRatingFilter;
+      const tagFilter = activeTagFilter;
+
+      let list = [...reviews];
+
+      if (ratingFilter !== "all") {
+        const threshold = parseInt(ratingFilter, 10);
+        if (ratingFilter === "5") {
+          list = list.filter((r) => r.rating === 5);
+        } else {
+          list = list.filter((r) => r.rating >= threshold);
+        }
+      }
+
+      if (cuisine) {
+        list = list.filter((r) => (r.cuisine || "").trim() === cuisine);
+      }
+
+      if (tagFilter) {
+        list = list.filter((r) =>
+          (r.tags || []).some((t) => t.trim().toLowerCase() === tagFilter)
+        );
+      }
+
+      if (term) {
+        list = list.filter((r) => {
+          const haystack = [
+            r.name || "",
+            r.cuisine || "",
+            r.favoriteDish || "",
+            r.notes || "",
+            r.location || "",
+            (r.tags || []).join(" "),
+          ]
+            .join(" ")
+            .toLowerCase();
+          return haystack.includes(term);
+        });
+      }
+
+      list.sort((a, b) => {
+        switch (sortMode) {
+          case "date-asc":
+            return (a.date || "").localeCompare(b.date || "");
+          case "rating-desc":
+            return (b.rating || 0) - (a.rating || 0);
+          case "rating-asc":
+            return (a.rating || 0) - (b.rating || 0);
+          case "name-asc":
+            return (a.name || "").localeCompare(b.name || "");
+          case "date-desc":
+          default:
+            return (b.date || "").localeCompare(a.date || "");
+        }
+      });
+
+      return list;
+    }
+
+    function renderTopSpots() {
+      if (!topSpotsList || !topSpotsEmpty) return;
+      const list = [...reviews]
+        .filter((r) => r.rating)
+        .sort((a, b) => {
+          if ((b.rating || 0) !== (a.rating || 0)) {
+            return (b.rating || 0) - (a.rating || 0);
+          }
+          return (b.date || "").localeCompare(a.date || "");
+        })
+        .slice(0, 5);
+
+      topSpotsList.innerHTML = "";
+      if (!list.length) {
+        topSpotsEmpty.style.display = "block";
+        return;
+      }
+      topSpotsEmpty.style.display = "none";
+
+      list.forEach((r, index) => {
+        const item = document.createElement("div");
+        item.className = "top-spot-item";
+
+        const rank = document.createElement("div");
+        rank.className = "top-spot-rank";
+        rank.textContent = `#${index + 1}`;
+
+        const main = document.createElement("div");
+        main.className = "top-spot-main";
+
+        const name = document.createElement("div");
+        name.className = "top-spot-name";
+        name.textContent = r.name || "Unnamed";
+
+        const meta = document.createElement("div");
+        meta.className = "top-spot-meta";
+        const bits = [];
+        if (r.cuisine) bits.push(r.cuisine);
+        if (r.priceLevel) bits.push(r.priceLevel + " · price");
+        if (r.favoriteDish) bits.push(`Dish: ${r.favoriteDish}`);
+        meta.textContent = bits.join(" • ");
+
+        main.appendChild(name);
+        main.appendChild(meta);
+
+        const right = document.createElement("div");
+        right.className = "top-spot-score";
+        const stars = document.createElement("div");
+        stars.className = "top-spot-stars";
+        stars.textContent = getStars(r.rating || 0);
+        const score = document.createElement("div");
+        score.className = "top-spot-rating";
+        score.textContent = `${r.rating || "–"}/5`;
+
+        right.appendChild(stars);
+        right.appendChild(score);
+
+        item.appendChild(rank);
+        item.appendChild(main);
+        item.appendChild(right);
+
+        topSpotsList.appendChild(item);
+      });
+    }
+
+    function renderReviews() {
+      const list = applyFiltersAndSorting();
+      reviewsGrid.innerHTML = "";
+      if (!list.length) {
+        emptyState.style.display = "block";
+      } else {
+        emptyState.style.display = "none";
+      }
+
+      list.forEach((r) => {
+        const card = document.createElement("article");
+        card.className = "review-card";
+
+        const topRow = document.createElement("div");
+        topRow.className = "review-row-top";
+
+        const left = document.createElement("div");
+        const nameEl = document.createElement("div");
+        nameEl.className = "restaurant-name";
+        nameEl.textContent = r.name || "Unnamed";
+
+        const meta = document.createElement("div");
+        meta.className = "restaurant-meta";
+
+        if (r.cuisine) {
+          const span = document.createElement("span");
+          span.textContent = r.cuisine;
+          meta.appendChild(span);
+        }
+
+        if (r.priceLevel) {
+          const span = document.createElement("span");
+          span.textContent = r.priceLevel + " · price";
+          meta.appendChild(span);
+        }
+
+        if (r.location) {
+          const span = document.createElement("span");
+          span.textContent = r.location;
+          meta.appendChild(span);
+        }
+
+        if (r.favoriteDish) {
+          const span = document.createElement("span");
+          span.textContent = `⭐ Dish: ${r.favoriteDish}`;
+          meta.appendChild(span);
+        }
+
+        left.appendChild(nameEl);
+        if (meta.childNodes.length) {
+          left.appendChild(meta);
+        }
+
+        const ratingPill = document.createElement("div");
+        ratingPill.className = "rating-pill";
+        const starsSpan = document.createElement("span");
+        starsSpan.className = "stars";
+        starsSpan.textContent = getStars(r.rating || 0);
+
+        const scoreSpan = document.createElement("span");
+        scoreSpan.className = "score";
+        scoreSpan.textContent = `${r.rating || "–"}/5`;
+
+        ratingPill.appendChild(starsSpan);
+        ratingPill.appendChild(scoreSpan);
+        topRow.appendChild(left);
+        topRow.appendChild(ratingPill);
+
+        const body = document.createElement("div");
+        body.className = "review-body";
+        body.textContent = r.notes || "No notes added.";
+
+        const tagsRow = document.createElement("div");
+        tagsRow.className = "review-tags";
+        (r.tags || []).forEach((tag) => {
+          const span = document.createElement("span");
+          span.className = "review-tag";
+          span.textContent = `#${tag}`;
+          tagsRow.appendChild(span);
+        });
+
+        const footer = document.createElement("div");
+        footer.className = "review-footer";
+        const leftF = document.createElement("div");
+        leftF.className = "left";
+
+        const dateLabel = document.createElement("span");
+        const formattedDate = r.date
+          ? new Date(r.date + "T00:00:00").toLocaleDateString()
+          : "No date";
+        dateLabel.textContent = formattedDate;
+
+        const dot = document.createElement("span");
+        dot.className = "dot";
+
+        const locationLabel = document.createElement("span");
+        locationLabel.textContent = r.location || "Location n/a";
+
+        leftF.appendChild(dateLabel);
+        leftF.appendChild(dot);
+        leftF.appendChild(locationLabel);
+
+        const rightF = document.createElement("div");
+        const label = document.createElement("span");
+        label.className = "label-pill";
+        label.textContent =
+          r.rating >= 4 ? "Repeat spot" : r.rating <= 2 ? "One & done" : "Maybe";
+        rightF.appendChild(label);
+
+        footer.appendChild(leftF);
+        footer.appendChild(rightF);
+
+        // Gameday badge
+        const badge = document.createElement("div");
+        badge.className = "gameday-badge";
+        badge.textContent = "🏈 Gameday Approved";
+        if (r.tags && r.tags.map((t) => t.toLowerCase()).includes("gameday")) {
+          badge.style.display = "inline-flex";
+        }
+
+        card.appendChild(badge);
+        card.appendChild(topRow);
+        card.appendChild(body);
+        if (tagsRow.childNodes.length) {
+          card.appendChild(tagsRow);
+        }
+        card.appendChild(footer);
+
+        reviewsGrid.appendChild(card);
+      });
+
+      renderStats(list);
+      renderTopSpots();
+    }
+
+    document.querySelectorAll(".chip[data-rating-filter]").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        document
+          .querySelectorAll(".chip[data-rating-filter]")
+          .forEach((c) => c.classList.remove("active"));
+        chip.classList.add("active");
+        activeRatingFilter = chip.dataset.ratingFilter || "all";
+        renderReviews();
+      });
+    });
+
+    searchInput.addEventListener("input", renderReviews);
+    cuisineFilter.addEventListener("change", renderReviews);
+    sortSelect.addEventListener("change", renderReviews);
+
+    addReviewForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("restaurantName").value.trim();
+      const date =
+        document.getElementById("visitDate").value ||
+        new Date().toISOString().slice(0, 10);
+      const cuisine = document.getElementById("cuisine").value.trim();
+      const rating = parseInt(document.getElementById("rating").value || "0", 10);
+      const priceLevel = document.getElementById("priceLevel").value;
+      const favoriteDish = document.getElementById("favoriteDish").value.trim();
+      const notes = document.getElementById("notes").value.trim();
+      const tagsValue = document.getElementById("tags").value.trim();
+
+      const tags = tagsValue
+        ? tagsValue
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
+        : [];
+
+      if (!name || !rating) {
+        alert("Please add at least a restaurant name and rating.");
+        return;
+      }
+
+      const newReview = {
+        id: nextId++,
+        name,
+        cuisine,
+        rating,
+        favoriteDish,
+        notes,
+        tags,
+        date,
+        location: "",
+        priceLevel,
+      };
+
+      reviews.push(newReview);
+      buildCuisineOptions();
+      buildQuickTags();
+      renderReviews();
+
+      addReviewForm.reset();
+      alert(
+        "Review saved on this page! (Note: This doesn't save to a server—copy/paste the data elsewhere if you want a permanent backup.)"
+      );
+    });
+
+    clearFormBtn.addEventListener("click", () => {
+      addReviewForm.reset();
+    });
+
+    scrollToFormBtn.addEventListener("click", () => {
+      addReviewPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    // Simple self-checks / test cases
+    console.assert(getStars(5) === "★★★★★", "getStars(5) should be 5 full stars");
+    console.assert(getStars(0) === "☆☆☆☆☆", "getStars(0) should be 5 empty stars");
+    console.assert(
+      reviews.some((r) => r.tags.includes("gameday")),
+      "There should be at least one gameday-tagged review for badge testing."
+    );
+
+    buildCuisineOptions();
+    buildQuickTags();
+    renderReviews();
+  </script>
+</body>
+</html>
